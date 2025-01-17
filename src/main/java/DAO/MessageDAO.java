@@ -25,14 +25,14 @@ public class MessageDAO {
             int affectedRows = preparedStatement.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new SQLException("Creating message failed, no rows affected.");
+                throw new SQLException("Message Creation failed, no such rows affected.");
             }
 
             try (ResultSet rs = preparedStatement.getGeneratedKeys()) {
                 if (rs.next()) {
                     message.setMessage_id(rs.getInt(1));
                 } else {
-                    throw new SQLException("Creating message failed, no ID obtained.");
+                    throw new SQLException("Message Creation failed !!!");
                 }
             }
         } catch (SQLException e) {

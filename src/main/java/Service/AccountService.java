@@ -20,7 +20,7 @@ public class AccountService {
         return accountDAO.accountList();
     }
 
-    public Account addNewAccount(Account account, String username, String password) {
+    public Account addAccount(Account account, String username, String password) {
         return accountDAO.insertAccount(account, username, password);
     }
 

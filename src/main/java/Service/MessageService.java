@@ -21,7 +21,7 @@ public class MessageService {
     }
 
     public Message createMessage(int posted_by, String message_text, long time_posted_epoch) {
-        if (message_text == null || message_text.isBlank() || message_text.length() > 255) {
+        if (message_text == null || message_text.length() > 255 || message_text.isBlank() ) {
             return null; 
         }
 
@@ -34,7 +34,7 @@ public class MessageService {
     }
     
     public Message updateMessage(int message_id, String newMessageText) {
-        if (newMessageText == null || newMessageText.isBlank() || newMessageText.length() > 255) {
+        if (newMessageText == null || newMessageText.length() > 255 || newMessageText.isBlank()) {
             return null;
         }
 

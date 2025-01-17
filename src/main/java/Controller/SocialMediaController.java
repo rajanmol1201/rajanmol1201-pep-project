@@ -7,7 +7,6 @@ import Service.AccountService;
 import Service.MessageService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import io.javalin.http.HttpStatus;
 
 import java.util.List;
 
@@ -39,16 +38,16 @@ public class SocialMediaController {
     private void registerAccount(Context ctx) {
         try {
             Account account = ctx.bodyAsClass(Account.class);
-            Account registeredAccount = accountService.addNewAccount(account, account.username, account.password);
+            Account registeredAccount = accountService.addAccount(account, account.username, account.password);
 
             if (registeredAccount != null) {
                 ctx.json(registeredAccount);
-                ctx.status(HttpStatus.OK);
+                ctx.status(200); //OK
             } else {
-                ctx.status(HttpStatus.BAD_REQUEST);
+                ctx.status(400);  //BAD_REQUEST
             }
         } catch (Exception e) {
-            ctx.status(HttpStatus.BAD_REQUEST).result(e.getMessage());
+            ctx.status(400).result(e.getMessage());
         }
     }
 
@@ -58,12 +57,12 @@ public class SocialMediaController {
             Account loggedInAccount = accountService.loginAccount(account.getUsername(), account.getPassword());
             if (loggedInAccount != null) {
                 ctx.json(loggedInAccount);
-                ctx.status(HttpStatus.OK);
+                ctx.status(200);  //OK
             } else {
-                ctx.status(HttpStatus.UNAUTHORIZED);
+                ctx.status(401);  //UNAUTHORIZED
             }
         } catch (Exception e) {
-            ctx.status(HttpStatus.UNAUTHORIZED).result(e.getMessage());
+            ctx.status(401).result(e.getMessage());
         }
     }
 
@@ -74,12 +73,12 @@ public class SocialMediaController {
                     message.getTime_posted_epoch());
             if (createdMessage != null) {
                 ctx.json(createdMessage);
-                ctx.status(HttpStatus.OK);
+                ctx.status(200);
             } else {
-                ctx.status(HttpStatus.BAD_REQUEST);
+                ctx.status(400);
             }
         } catch (Exception e) {
-            ctx.status(HttpStatus.BAD_REQUEST).result(e.getMessage());
+            ctx.status(400).result(e.getMessage());
         }
     }
 
@@ -87,9 +86,9 @@ public class SocialMediaController {
         try {
             List<Message> messages = messageService.getAllMessages();
             ctx.json(messages);
-            ctx.status(HttpStatus.OK);
+            ctx.status(200);
         } catch (Exception e) {
-            ctx.status(HttpStatus.INTERNAL_SERVER_ERROR).result(e.getMessage());
+            ctx.status(500).result(e.getMessage());  //INTERNAL_SERVER_ERROR
         }
     }
 
@@ -99,14 +98,14 @@ public class SocialMediaController {
             Message message = messageService.getMessageById(messageId);
             if (message != null) {
                 ctx.json(message);
-                ctx.status(HttpStatus.OK);
+                ctx.status(200);
             } else {
-                ctx.status(HttpStatus.OK); 
+                ctx.status(200); 
             }
         } catch (NumberFormatException e) {
-            ctx.status(HttpStatus.BAD_REQUEST).result("Invalid message ID");
+            ctx.status(400).result("Invalid message_id");
         } catch (Exception e) {
-            ctx.status(HttpStatus.INTERNAL_SERVER_ERROR).result(e.getMessage());
+            ctx.status(500).result(e.getMessage());
         }
     }
 
@@ -116,14 +115,14 @@ public class SocialMediaController {
             Message deletedMessage = messageService.deleteMessage(messageId);
             if (deletedMessage != null) {
                 ctx.json(deletedMessage);
-                ctx.status(HttpStatus.OK);
+                ctx.status(200);
             } else {
-                ctx.status(HttpStatus.OK);
+                ctx.status(200);
             }
         } catch (NumberFormatException e) {
-            ctx.status(HttpStatus.BAD_REQUEST).result("Invalid message ID");
+            ctx.status(400).result("Invalid message_ID");
         } catch (Exception e) {
-            ctx.status(HttpStatus.INTERNAL_SERVER_ERROR).result(e.getMessage());
+            ctx.status(500).result(e.getMessage());
         }
     }
 
@@ -134,14 +133,14 @@ public class SocialMediaController {
             Message updatedMessage = messageService.updateMessage(messageId, message.getMessage_text());
             if (updatedMessage != null) {
                 ctx.json(updatedMessage);
-                ctx.status(HttpStatus.OK);
+                ctx.status(200);
             } else {
-                ctx.status(HttpStatus.BAD_REQUEST);
+                ctx.status(400);
             }
         } catch (NumberFormatException e) {
-            ctx.status(HttpStatus.BAD_REQUEST).result("Invalid message ID");
+            ctx.status(400).result("Invalid message_ID");
         } catch (Exception e) {
-            ctx.status(HttpStatus.BAD_REQUEST).result(e.getMessage());
+            ctx.status(400).result(e.getMessage());
         }
     }
 
@@ -150,11 +149,11 @@ public class SocialMediaController {
             int accountId = Integer.parseInt(ctx.pathParam("account_id"));
             List<Message> messages = messageService.getMessagesByUserId(accountId);
             ctx.json(messages);
-            ctx.status(HttpStatus.OK);
+            ctx.status(200);
         } catch (NumberFormatException e) {
-            ctx.status(HttpStatus.BAD_REQUEST).result("Invalid account ID");
+            ctx.status(400).result("Invalid account_ID");
         } catch (Exception e) {
-            ctx.status(HttpStatus.INTERNAL_SERVER_ERROR).result(e.getMessage());
+            ctx.status(500).result(e.getMessage());
         }
     }
 }

@@ -30,14 +30,14 @@ public class AccountDAO {
             int affectedRows = preparedStatement.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new SQLException("Creating account failed, no rows affected.");
+                throw new SQLException("None of the Rows Affected ---> Account Creation Failed !!!.");
             }
 
             try (ResultSet rs = preparedStatement.getGeneratedKeys()) {
                 if (rs.next()) {
                     account.setAccount_id(rs.getInt(1));
                 } else {
-                    throw new SQLException("Creating account failed, no ID obtained.");
+                    throw new SQLException("Account Creation Failed !!!");
                 }
             }
         } catch (SQLException e) {
@@ -61,10 +61,10 @@ public class AccountDAO {
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
                     int accountId = rs.getInt("account_id");
-                    String retrievedUsername = rs.getString("username");
-                    String retrievedPassword = rs.getString("password");
+                    String Username = rs.getString("username");
+                    String Password = rs.getString("password");
 
-                    account = new Account(accountId, retrievedUsername, retrievedPassword);
+                    account = new Account(accountId, Username, Password);
                 }
             }
         } catch (SQLException e) {
@@ -122,7 +122,7 @@ public class AccountDAO {
     }
 
     
-    public void updateAccount(int accountId, Account account) {
+    public void updateAccount(int account_id, Account account) {
         String sql = "UPDATE account SET username = ?, password = ? WHERE account_id = ?";
 
         try (Connection connection = ConnectionUtil.getConnection();
@@ -130,7 +130,7 @@ public class AccountDAO {
 
             preparedStatement.setString(1, account.getUsername());
             preparedStatement.setString(2, account.getPassword());
-            preparedStatement.setInt(3, accountId);
+            preparedStatement.setInt(3, account_id);
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
